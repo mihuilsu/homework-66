@@ -1,0 +1,12 @@
+<%- include('partials/header', { title: 'Error ' + status }) %>
+
+<div class="auth-wrapper">
+  <div class="auth-card" style="text-align:center;">
+    <div style="font-size:3rem; margin-bottom:1rem;"><%= status === 404 ? '🔍' : '💥' %></div>
+    <h2 class="auth-card__title"><%= status %></h2>
+    <p class="auth-card__subtitle"><%= message %></p>
+    <a href="/" class="btn btn--primary" style="margin-top:1.5rem;">Go Home</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

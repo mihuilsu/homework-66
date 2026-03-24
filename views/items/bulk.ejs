@@ -1,0 +1,42 @@
+<%- include('../partials/header', { title: 'Bulk Insert' }) %>
+
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:580px;">
+    <h2 class="auth-card__title">📋 Bulk Insert</h2>
+    <p class="auth-card__subtitle">Inserts multiple documents — <code>insertMany</code></p>
+
+    <% if (error) { %>
+      <div class="alert alert--error"><%= error %></div>
+    <% } %>
+    <% if (result) { %>
+      <div class="alert" style="background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.3);color:var(--color-accent);">
+        ✅ <%= result %>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/items/bulk" class="auth-form">
+      <div class="form-group">
+        <label>JSON Array of Documents</label>
+        <textarea name="json" rows="10" style="
+          background:var(--color-bg);
+          border:1px solid var(--color-border);
+          border-radius:6px;
+          padding:.65rem .9rem;
+          color:var(--color-text);
+          font-family:var(--font-mono);
+          font-size:.85rem;
+          width:100%;
+          resize:vertical;
+        " placeholder='[
+  { "title": "Doc 1", "category": "Backend", "author": "mihuilsu" },
+  { "title": "Doc 2", "category": "Database", "author": "mihuilsu" }
+]' required></textarea>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">Insert Many</button>
+    </form>
+
+    <p class="auth-card__footer"><a href="/data">← Back to Data</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

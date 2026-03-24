@@ -1,0 +1,36 @@
+<%- include('partials/header', { title: 'Home' }) %>
+
+<section class="hero">
+  <h1 class="hero__title">Express + MongoDB Atlas</h1>
+  <p class="hero__subtitle">
+    A Node.js server with Passport authentication and MongoDB Atlas data integration.
+  </p>
+  <% if (user) { %>
+    <a href="/data" class="btn btn--primary">View Data →</a>
+  <% } else { %>
+    <div class="hero__actions">
+      <a href="/login" class="btn btn--primary">Login</a>
+      <a href="/register" class="btn btn--outline">Register</a>
+    </div>
+  <% } %>
+</section>
+
+<section class="features">
+  <div class="feature-card">
+    <div class="feature-card__icon">🔐</div>
+    <h3>Passport Authentication</h3>
+    <p>Local strategy with bcrypt password hashing and session persistence via MongoDB.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-card__icon">☁️</div>
+    <h3>MongoDB Atlas</h3>
+    <p>Cloud-hosted database with Mongoose ODM for schema validation and querying.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-card__icon">📦</div>
+    <h3>Data Read Route</h3>
+    <p>Protected <code>/data</code> route fetches all documents from the Items collection.</p>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

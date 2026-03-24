@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' | HW-66' : 'HW-66' %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">⚡ HW-66</a>
+    <div class="nav-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <span class="nav-user">👤 <%= user.name %></span>
+        <a href="/data" class="nav-link">Data</a>
+        <a href="/items/new" class="nav-link">+ Add</a>
+        <a href="/items/bulk" class="nav-link">Bulk</a>
+        <a href="/logout" class="nav-link nav-link--danger">Logout</a>
+      <% } else { %>
+        <a href="/login" class="nav-link">Login</a>
+        <a href="/register" class="nav-link nav-link--accent">Register</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
