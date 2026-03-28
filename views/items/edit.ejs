@@ -1,15 +1,20 @@
 <%- include('../partials/header', { title: 'Edit Item' }) %>
 
-<div class="auth-wrapper">
+<div class="auth-wrapper" style="flex-direction:column;gap:1.5rem;">
+
+  <%# ── PATCH: updateOne ($set) ──────────────────────────────────────────── %>
   <div class="auth-card" style="max-width:520px;">
-    <h2 class="auth-card__title">✏️ Edit Item</h2>
-    <p class="auth-card__subtitle">Updates a single document — <code>updateOne</code> with <code>$set</code></p>
+    <h2 class="auth-card__title">✏️ Update Item</h2>
+    <p class="auth-card__subtitle">
+      <code>PATCH</code> — partial update with <code>$set</code> (only changed fields are overwritten)
+    </p>
 
     <% if (error) { %>
       <div class="alert alert--error"><%= error %></div>
     <% } %>
 
-    <form method="POST" action="/items/<%= item._id %>" class="auth-form">
+    <%# method-override: form posts to PATCH /items/:id %>
+    <form method="POST" action="/items/<%= item._id %>?_method=PATCH" class="auth-form">
       <div class="form-group">
         <label>Title *</label>
         <input type="text" name="title" value="<%= item.title %>" required />
@@ -26,13 +31,43 @@
         <label>Author</label>
         <input type="text" name="author" value="<%= item.author %>" />
       </div>
-      <button type="submit" class="btn btn--primary btn--full">Save Changes</button>
+      <button type="submit" class="btn btn--primary btn--full">PATCH — Save Changes</button>
+    </form>
+  </div>
+
+  <%# ── PUT: replaceOne ──────────────────────────────────────────────────── %>
+  <div class="auth-card" style="max-width:520px;">
+    <h2 class="auth-card__title">🔁 Replace Item</h2>
+    <p class="auth-card__subtitle">
+      <code>PUT</code> — full replacement with <code>replaceOne</code> (entire document is swapped)
+    </p>
+
+    <%# method-override: form posts to PUT /items/:id %>
+    <form method="POST" action="/items/<%= item._id %>?_method=PUT" class="auth-form">
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" name="title" value="<%= item.title %>" required />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" name="description" value="<%= item.description %>" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" value="<%= item.category %>" />
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" name="author" value="<%= item.author %>" />
+      </div>
+      <button type="submit" class="btn btn--outline btn--full">PUT — Replace Document</button>
     </form>
 
     <p class="auth-card__footer">
       <a href="/data/<%= item._id %>">View detail</a> &nbsp;·&nbsp; <a href="/data">← Back to Data</a>
     </p>
   </div>
+
 </div>
 
 <%- include('../partials/footer') %>

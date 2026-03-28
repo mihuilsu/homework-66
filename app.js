@@ -3,6 +3,7 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
+import methodOverride from 'method-override';
 import { connectDB } from './config/db.js';
 import { configurePassport } from './config/passport.js';
 import authRoutes from './routes/auth.js';
@@ -25,6 +26,10 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// ── Method override — allows forms to send PATCH, PUT, DELETE ────────────────
+// HTML forms only support GET/POST, so we use ?_method=PATCH in the action URL
+app.use(methodOverride('_method'));
+
 // ── Session (stored in MongoDB Atlas) ───────────────────────────────────────
 app.use(
   session({
@@ -32,7 +37,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 24 hours
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })
 );
 

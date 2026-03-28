@@ -45,45 +45,44 @@
       class="filter-input"
       autocomplete="off"
     />
-    <%# Hint shown below the projection input %>
     <div class="projection-hint">
       Allowed: <% allowedFields.forEach((f, i) => { %>
         <span class="projection-tag" onclick="appendField('<%= f %>')"><%= f %></span><% if (i < allowedFields.length - 1) { %>, <% } %>
       <% }) %>
     </div>
   </div>
-
-  <%# Apply is disabled until at least one input has a value (JS handles this) %>
   <button type="submit" class="btn btn--primary btn--sm" id="applyBtn" disabled>Apply</button>
   <a href="/data" class="btn btn--outline btn--sm">Reset</a>
 </form>
 
-<%# ── Projection warning: invalid fields entered ─────────────────────────── %>
+<%# ── Projection warning ──────────────────────────────────────────────────── %>
 <% if (invalidFields && invalidFields.length > 0) { %>
   <div class="alert alert--warning">
     ⚠️ Unknown field<%= invalidFields.length > 1 ? 's' : '' %>
     <strong><%= invalidFields.join(', ') %></strong>
-    ignored. Allowed fields: <strong><%= allowedFields.join(', ') %></strong>.
+    ignored. Allowed: <strong><%= allowedFields.join(', ') %></strong>.
   </div>
 <% } %>
 
-<%# ── updateMany / deleteMany forms ─────────────────────────────────────────── %>
+<%# ── Bulk operations: PATCH updateMany / DELETE deleteMany ──────────────── %>
 <div class="bulk-actions">
   <details class="bulk-panel">
     <summary>🔄 Update Many by Category</summary>
-    <form method="POST" action="/items/update-many" class="bulk-form">
+    <%# method-override: form posts to PATCH /items/update-many %>
+    <form method="POST" action="/items/update-many?_method=PATCH" class="bulk-form">
       <input type="text" name="category" placeholder="Current category (any case)" required />
       <input type="text" name="newCategory" placeholder="New category name" required />
-      <button type="submit" class="btn btn--primary btn--sm">updateMany</button>
+      <button type="submit" class="btn btn--primary btn--sm">PATCH updateMany</button>
     </form>
   </details>
 
   <details class="bulk-panel">
     <summary>🗑️ Delete Many by Category</summary>
-    <form method="POST" action="/items/delete-many" class="bulk-form"
+    <%# method-override: form posts to DELETE /items/delete-many %>
+    <form method="POST" action="/items/delete-many?_method=DELETE" class="bulk-form"
           onsubmit="return confirm('Delete ALL items in this category?')">
       <input type="text" name="category" placeholder="Category to delete (any case)" required />
-      <button type="submit" class="btn btn--sm" style="background:var(--color-danger);color:#fff;">deleteMany</button>
+      <button type="submit" class="btn btn--sm" style="background:var(--color-danger);color:#fff;">DELETE deleteMany</button>
     </form>
   </details>
 </div>
@@ -122,9 +121,10 @@
           <div style="display:flex;gap:.5rem;">
             <% if (item._id) { %>
               <a href="/items/<%= item._id %>/edit" class="btn btn--outline btn--sm">Edit</a>
-              <form method="POST" action="/items/<%= item._id %>/delete"
+              <%# method-override: form posts to DELETE /items/:id %>
+              <form method="POST" action="/items/<%= item._id %>?_method=DELETE"
                     onsubmit="return confirm('Delete this item?')" style="display:inline;">
-                <button type="submit" class="btn btn--sm" style="background:var(--color-danger);color:#fff;">Del</button>
+                <button type="submit" class="btn btn--sm" style="background:var(--color-danger);color:#fff;">DELETE</button>
               </form>
             <% } %>
           </div>
@@ -135,7 +135,7 @@
 <% } %>
 
 <script>
-  // ── Enable Apply button only when at least one filter input has a value ──
+  // Enable Apply button only when at least one input has a value
   const form     = document.getElementById('filterForm');
   const applyBtn = document.getElementById('applyBtn');
   const inputs   = form.querySelectorAll('input[type="text"]');
@@ -146,15 +146,14 @@
   }
 
   inputs.forEach(i => i.addEventListener('input', checkInputs));
+  checkInputs(); // run on load in case URL already has params
 
-  // Run on page load so the button is enabled if URL already has params
-  checkInputs();
-
-  // ── Click a projection tag to append it to the fields input ──────────────
+  // Click a projection tag to append it to the fields input
   function appendField(field) {
     const input = document.getElementById('fieldsInput');
-    const current = input.value.trim();
-    const fields = current ? current.split(',').map(f => f.trim()).filter(Boolean) : [];
+    const fields = input.value.trim()
+      ? input.value.trim().split(',').map(f => f.trim()).filter(Boolean)
+      : [];
     if (!fields.includes(field)) {
       fields.push(field);
       input.value = fields.join(',');
